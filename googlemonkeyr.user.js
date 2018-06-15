@@ -1,6 +1,6 @@
 // ==UserScript==
 // @author			mungushume
-// @version			1.7.0
+// @version			1.7.2
 // @name			GoogleMonkeyR
 // @namespace		http://www.monkeyr.com
 // @description		Google - Multiple columns of results, Remove "Sponsored Links", Number results, Auto-load more results, Remove web search dialogues, Open external links in a new tab, self updating and all configurable from a simple user dialogue.
@@ -28,6 +28,17 @@
 // @scriptsource	http://userscripts.org/scripts/show/9310
 // @scriptsource	http://google.monkeyr.com/script/1.7.0/googlemonkeyr.user.js
 /* StartHistory
+
+
+ 
+v.1.7.2 - 31 Aug 2014 - by Boltex 
+  - Bug fix: Google Changes in wdith in some divs
+  - Feature: Remove next page link and loading image. 
+  *note* - If the results of the your search will go beyond the screen, 
+  you must find and change resolution. Find 1240px and change to your value. 
+
+v.1.7.1 - 26 Mar 2014 - by Boltex
+ - Bug fix: Calculator results (single result) pages now work properly
 
 v1.7.0 - 01 Nov 2013
  - Bug fix: Google changes in some tlds fix for display issues
@@ -659,7 +670,7 @@ EndHistory */
     
             var style = ''
             // style += (" #cnt #center_col {width:auto !important; max-width:100% !important;} #cnt #foot, .mw {margin-left:0 !important; width:auto !important; max-width:100% !important;}#rhs {left:auto; !important}#botstuff .sp_cnt,#botstuff .ssp, #ires{display:none} .s{max-width:98%!important;} .vshid{display:inline} #res h3.r {white-space:normal}");
-            style += ("#cnt.singleton #center_col, #cnt.singleton #foot, .mw {width:auto !important; max-width:100% !important;} #rhs {left:auto !important; position:absolute}#botstuff .sp_cnt,#botstuff .ssp, #ires{display:none} .s{max-width:98%!important;} .vshid{display:inline} .ab_dropdown ul{list-style:none} #GTR *{white-space:normal!important} #GTR{border-spacing:5px} #rcnt .col:nth-of-type(3){width:100%!important} #rcnt .col:nth-of-type(4){float: none; right: 0px; top: -140px; width:100% !important}");
+            style += ("hr.rgsep { margin: 0 -15px 16px; } #extrares.med {padding: 0 !important} #cnt.singleton #center_col, #cnt.singleton #foot, .mw {width:1240px !important;} #rhs {left:auto !important; position:absolute}#botstuff .sp_cnt,#botstuff .ssp, #ires{display:none} .s{max-width:98%!important;} .vshid{display:inline} .ab_dropdown ul{list-style:none} #GTR *{white-space:none!important} #GTR{border-spacing:5px} #rcnt .col:nth-of-type(3){width:100%!important} #rcnt .col:nth-of-type(4){float: none; right: 0px; top: -140px; width:100% !important}");
             style += ("div#scrollTop a {background:url("+UIL.RES.TOP_PNG+") transparent;border-radius: 10px 10px 10px 10px;bottom: 30px;height: 40px;position: fixed;right: 30px;width: 40px;z-index: 10000;}div#scrollTop a{-webkit-transition: opacity 1.0s ease;-moz-transition: opacity 1.0s ease;-o-transition: opacity 1.0s ease;0} div#scrollTop a.mh_show{opacity: 0.2} div#scrollTop a.mh_hide{opacity: 0}div#scrollTop a:hover{-webkit-transition: opacity .5s ease;-moz-transition: opacity .5s ease;-o-transition: opacity .5s ease;opacity: 0.5;}");
     
             if(this.numColumns>1)
@@ -1048,9 +1059,9 @@ EndHistory */
                 navbar.style.display = "none";
                 if(!loadingimg)
                 {
-                    var div = document.buildElement('div', {id:'loadingimg'});
-                    var p = document.buildElement('p', {}, "Loading");
-                    var a = document.buildElement('a',{href:nextLink.href}, 'next page');
+                    var div = document.buildElement('div', {id:''});
+                    var p = document.buildElement('p', {}, "");
+                    var a = document.buildElement('a',{href:nextLink.href}, '');
                     div.appendChild(p);
                     div.appendChild(a);
                     this.nextLink = a;
