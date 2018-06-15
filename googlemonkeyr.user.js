@@ -1,6 +1,6 @@
 // ==UserScript==
 // @author			mungushume
-// @version			1.7.2
+// @version			1.7.3.1
 // @name			GoogleMonkeyR
 // @namespace		http://www.monkeyr.com
 // @description		Google - Multiple columns of results, Remove "Sponsored Links", Number results, Auto-load more results, Remove web search dialogues, Open external links in a new tab, self updating and all configurable from a simple user dialogue.
@@ -29,7 +29,13 @@
 // @scriptsource	http://google.monkeyr.com/script/1.7.0/googlemonkeyr.user.js
 /* StartHistory
 
+v.1.7.3.1 - 23 Jul 2015 - by Kilvoctu
+  - Bug fix: Autoload results should now display more results.
 
+v.1.7.3 - 23 Jul 2015 - by Kilvoctu
+  - Bug fix: Showing search results after Google changes
+  - Change: Column width scales with window width
+  - Known issues: Autoload results doesn't display more results.
  
 v.1.7.2 - 31 Aug 2014 - by Boltex 
   - Bug fix: Google Changes in wdith in some divs
@@ -484,7 +490,7 @@ EndHistory */
     var UIL =
         {
         scriptName : "GoogleMonkeyR",
-        scriptVersion : "1.7.0",
+        scriptVersion : "v.1.7.3.1",
         scriptId : "9310",
         watching : false,
     
@@ -669,8 +675,8 @@ EndHistory */
             }
     
             var style = ''
-            // style += (" #cnt #center_col {width:auto !important; max-width:100% !important;} #cnt #foot, .mw {margin-left:0 !important; width:auto !important; max-width:100% !important;}#rhs {left:auto; !important}#botstuff .sp_cnt,#botstuff .ssp, #ires{display:none} .s{max-width:98%!important;} .vshid{display:inline} #res h3.r {white-space:normal}");
-            style += ("hr.rgsep { margin: 0 -15px 16px; } #extrares.med {padding: 0 !important} #cnt.singleton #center_col, #cnt.singleton #foot, .mw {width:1240px !important;} #rhs {left:auto !important; position:absolute}#botstuff .sp_cnt,#botstuff .ssp, #ires{display:none} .s{max-width:98%!important;} .vshid{display:inline} .ab_dropdown ul{list-style:none} #GTR *{white-space:none!important} #GTR{border-spacing:5px} #rcnt .col:nth-of-type(3){width:100%!important} #rcnt .col:nth-of-type(4){float: none; right: 0px; top: -140px; width:100% !important}");
+            //style += (" #cnt #center_col {width:auto !important; max-width:100% !important;} #cnt #foot, .mw {margin-left:0 !important; width:auto !important; max-width:100% !important;}#rhs {left:auto; !important}#botstuff .sp_cnt,#botstuff .ssp, #ires{display:none} .s{max-width:98%!important;} .vshid{display:inline} #res h3.r {white-space:normal}");
+            style += ("#cnt.singleton #center_col, #cnt.singleton #foot, .mw {width:auto !important; max-width:100% !important;} #rhs {left:auto !important; position:absolute}#botstuff .sp_cnt,#botstuff .ssp, #ires{display:none} .s{max-width:98%!important;} .vshid{display:inline} .ab_dropdown ul{list-style:none} #GTR *{white-space:normal!important} #GTR{border-spacing:5px} #rcnt .col:nth-of-type(3){width:100%!important} #rcnt .col:nth-of-type(4){float: none; right: 0px; top: -140px; width:100% !important}");
             style += ("div#scrollTop a {background:url("+UIL.RES.TOP_PNG+") transparent;border-radius: 10px 10px 10px 10px;bottom: 30px;height: 40px;position: fixed;right: 30px;width: 40px;z-index: 10000;}div#scrollTop a{-webkit-transition: opacity 1.0s ease;-moz-transition: opacity 1.0s ease;-o-transition: opacity 1.0s ease;0} div#scrollTop a.mh_show{opacity: 0.2} div#scrollTop a.mh_hide{opacity: 0}div#scrollTop a:hover{-webkit-transition: opacity .5s ease;-moz-transition: opacity .5s ease;-o-transition: opacity .5s ease;opacity: 0.5;}");
     
             if(this.numColumns>1)
@@ -687,7 +693,7 @@ EndHistory */
             {
     //			style += ("#rcnt{margin-top:1em} #sfcnt,#sftr,#searchform{display:none!important;}#cnt{padding:0}#cnt .mw:first-child{position:absolute;top:4.5em;right:0}#rshdr .sfcc{position:absolute;top:2em;right:0}");
                 style += ("#ab_ctls,#ab_name,#resultStats{top:0} #gb,#gb.gbes,#gb.gbesi,#gb.gbem,#gb.gbemi{height:0!important}#gbx1,#gbx2{height:0!important}#gbq2[class='gbt'] #gbqfw{display:none;}#main{margin-top:44px!important}#gbu{margin-right:232px!important}");
-                // document.getElementById('gbq').addEventListener("DOMAttrModified", this.resizeWatcher, false);
+                //document.getElementById('gbq').addEventListener("DOMAttrModified", this.resizeWatcher, false);
                 //this.resizeWatcher(true);
             }
     
@@ -1157,8 +1163,9 @@ EndHistory */
                 // this.winInnerHeight = 0;
     
                 document.getElementById('ires').parentNode.appendChild(table);
-                var list = document.getElementsByXPath("//div[@id='ires']//li[contains(@class,'g')] | //div[@id='ires']//li/div[@class='g']");
-                
+                var list = document.getElementsByXPath("//div[@id='ires']//li[contains(@class,'g')] | //div[@id='ires']//li/div[@class='g'] | //div[@id='ires']//div[@class='g']");
+                //var list = document.getElementsByXPath("//div[@id='ires']//li[contains(@class,'g')] | //div[@id='ires']//li/div[@class='g']");
+            
                 var length = list.length;
                 if((ires = document.getElementById('ires')) && (cnt = document.getElementById('cnt'))){
                     ires.style.display = ((length==1) ? 'block' : 'none');
@@ -1347,8 +1354,8 @@ EndHistory */
                 this.resultStats.innerHTML = stats.innerHTML;
             }
     
-            // var list = document.getElementsByXPath(".//div[@id='res']/div//li[starts-with(@class,'g')]/ | .//div[@id='res']/div//li/div[@class='g']", nextResult);
-            var list = document.getElementsByXPath(".//div[@id='ires']/ol/div[starts-with(@class,'srg')]/li", nextResult);
+            //var list = document.getElementsByXPath(".//div[@id='res']/div//li[starts-with(@class,'g')]/ | .//div[@id='res']/div//li/div[@class='g']", nextResult);
+            var list = document.getElementsByXPath(".//div[@id='ires']/ol/div[starts-with(@class,'srg')]/li | //div[@id='ires']//div[@class='g'] | //div[@id='ires']//li[contains(@class,'g')]", nextResult);
             var length = list.length;
             if((ires = document.getElementById('ires')) && (cnt = document.getElementById('cnt'))){
                 ires.style.display = ((length==1) ? 'block' : 'none');
