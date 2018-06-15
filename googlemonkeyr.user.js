@@ -1,6 +1,6 @@
 // ==UserScript==
 // @author			mungushume
-// @version			1.7.3.2
+// @version			1.7.3.3
 // @name			GoogleMonkeyR
 // @namespace		http://www.monkeyr.com
 // @description		Google - Multiple columns of results, Remove "Sponsored Links", Number results, Auto-load more results, Remove web search dialogues, Open external links in a new tab, self updating and all configurable from a simple user dialogue.
@@ -28,6 +28,10 @@
 // @scriptsource	http://userscripts.org/scripts/show/9310
 // @scriptsource	http://google.monkeyr.com/script/1.7.0/googlemonkeyr.user.js
 /* StartHistory
+
+v.1.7.3.3 - 4 Oct 2016 - by Roxz
+  -bug fix: colum spacing
+  -bug fix: Text alignment
 
 v.1.7.3.2 - 18 Jul 2016 - by Topogiz
   - bug fix: colums should be appropriately wide now
@@ -684,7 +688,7 @@ EndHistory */
             
             // fix for a problem where columns end up too narrow
             // see https://greasyfork.org/fr/forum/discussion/10487/x for a discussion of the fix
-            style += ("div.col {width: 90% !important;}");
+            style += ("div.col {width: 100% !important;}");
     
             if(this.numColumns>1)
             {
@@ -693,7 +697,7 @@ EndHistory */
     
             if(this.autoLoad)
             {
-                style += ("#loadingimg {width:180px;height:34px;background-image:url(" + UIL.RES.LOADING_GIF + ");background-repeat:no-repeat;margin:2em auto auto auto;padding:10px;display:none;} #loadingimg p{font-size:130%;font-weight:bold;padding-left:40px;margin:0;float:left} #loadingimg a{text-align: left; float: left;margin: 2px 10px;}");
+                style += ("#loadingimg {width:180px;height:34px;background-image:url(" + UIL.RES.LOADING_GIF + ");background-repeat:no-repeat;margin:2em auto auto auto;padding:10px;display:none;} #loadingimg p{font-size:130%;font-weight:bold;padding-left:40px;margin:0;float:left} #loadingimg a{text-align: center; float: left;margin: 2px 10px;}");
             }
     
             if(this.hideSearch)
