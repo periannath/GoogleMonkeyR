@@ -1,6 +1,6 @@
 // ==UserScript==
 // @author			mungushume
-// @version			1.7.3.1
+// @version			1.7.3.2
 // @name			GoogleMonkeyR
 // @namespace		http://www.monkeyr.com
 // @description		Google - Multiple columns of results, Remove "Sponsored Links", Number results, Auto-load more results, Remove web search dialogues, Open external links in a new tab, self updating and all configurable from a simple user dialogue.
@@ -29,6 +29,9 @@
 // @scriptsource	http://google.monkeyr.com/script/1.7.0/googlemonkeyr.user.js
 /* StartHistory
 
+v.1.7.3.2 - 18 Jul 2016 - by Topogiz
+  - bug fix: colums should be appropriately wide now
+  
 v.1.7.3.1 - 23 Jul 2015 - by Kilvoctu
   - Bug fix: Autoload results should now display more results.
 
@@ -678,6 +681,10 @@ EndHistory */
             //style += (" #cnt #center_col {width:auto !important; max-width:100% !important;} #cnt #foot, .mw {margin-left:0 !important; width:auto !important; max-width:100% !important;}#rhs {left:auto; !important}#botstuff .sp_cnt,#botstuff .ssp, #ires{display:none} .s{max-width:98%!important;} .vshid{display:inline} #res h3.r {white-space:normal}");
             style += ("#cnt.singleton #center_col, #cnt.singleton #foot, .mw {width:auto !important; max-width:100% !important;} #rhs {left:auto !important; position:absolute}#botstuff .sp_cnt,#botstuff .ssp, #ires{display:none} .s{max-width:98%!important;} .vshid{display:inline} .ab_dropdown ul{list-style:none} #GTR *{white-space:normal!important} #GTR{border-spacing:5px} #rcnt .col:nth-of-type(3){width:100%!important} #rcnt .col:nth-of-type(4){float: none; right: 0px; top: -140px; width:100% !important}");
             style += ("div#scrollTop a {background:url("+UIL.RES.TOP_PNG+") transparent;border-radius: 10px 10px 10px 10px;bottom: 30px;height: 40px;position: fixed;right: 30px;width: 40px;z-index: 10000;}div#scrollTop a{-webkit-transition: opacity 1.0s ease;-moz-transition: opacity 1.0s ease;-o-transition: opacity 1.0s ease;0} div#scrollTop a.mh_show{opacity: 0.2} div#scrollTop a.mh_hide{opacity: 0}div#scrollTop a:hover{-webkit-transition: opacity .5s ease;-moz-transition: opacity .5s ease;-o-transition: opacity .5s ease;opacity: 0.5;}");
+            
+            // fix for a problem where columns end up too narrow
+            // see https://greasyfork.org/fr/forum/discussion/10487/x for a discussion of the fix
+            style += ("div.col {width: 90% !important;}");
     
             if(this.numColumns>1)
             {
