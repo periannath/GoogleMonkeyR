@@ -1224,7 +1224,7 @@ EndHistory */
                     cnt.className = ((length==1) ? cnt.className.replace(' singleton','') : cnt.className + ' singleton');
                     if(length==1) return false;
                 }
-                for (let i = 0; i < list.length; i++)
+                for (var i = 0; i < list.length; i++)
                 {
                     this.resultsToTable(list, i, length, true);
                 }
