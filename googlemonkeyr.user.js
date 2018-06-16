@@ -779,6 +779,7 @@ EndHistory */
             style += ("#brs { margin: 0px !important;}");
             style += (".e2BEnf {display: inline-block !important; padding: 0px !important; margin-right: 20px}");
             style += ("#brs .card-section { display: inline-block !important;}");
+            style += ("a.duf3 { width: 100px; text-align: right;}");
             style += (";");
     
             if(!this.watching)this.addStyle("@namespace url(http://www.w3.org/1999/xhtml); "+style);
