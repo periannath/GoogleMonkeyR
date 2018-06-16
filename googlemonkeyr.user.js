@@ -1,6 +1,6 @@
 // ==UserScript==
 // @author			mungushume
-// @version			1.7.3.3
+// @version			1.7.5
 // @name			GoogleMonkeyR
 // @namespace		http://www.monkeyr.com
 // @description		Google - Multiple columns of results, Remove "Sponsored Links", Number results, Auto-load more results, Remove web search dialogues, Open external links in a new tab, self updating and all configurable from a simple user dialogue.
@@ -28,6 +28,16 @@
 // @scriptsource	http://userscripts.org/scripts/show/9310
 // @scriptsource	http://google.monkeyr.com/script/1.7.0/googlemonkeyr.user.js
 /* StartHistory
+
+v.1.7.5 - 16 Jun 2018 - by Peri
+  - Change: Merge 1.7.3.3 and 1.7.4
+  - Bug fix: Wrong width for multi column fixed
+  - Bug fix: Remove empty results
+
+v.1.7.4 - 19 Jul 2017 - by linus linus
+ - Bug fix: Settings link re-added
+ - Bug fix: Inline numbered re-added
+ - Bug fix: Rich cards results re-added
 
 v.1.7.3.3 - 4 Oct 2016 - by Roxz
   -bug fix: colum spacing
@@ -485,7 +495,6 @@ v1.0.1 - 16 May 2007
  	document as a patsy
 
 EndHistory */
-// @downloadURL none
 // ==/UserScript==
 
 
@@ -758,7 +767,19 @@ EndHistory */
             // style += ("#side_tab a {color:#444;background-color:"+hue+";border: meduim none;box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.2);-webkit-box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.2);font-weight: bold;padding: 3px 14px;margin-top: 50px;text-decoration: none;border-radius: 6px 6px 0 0;transform: rotate(-90deg);-webkit-transform: rotate(-90deg);-moz-transform: rotate(-90deg);filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);position: absolute;}#side_tab{float: right;height: 100px;position: absolute;right: -50px;width: 100px;z-index:-10000000}#rhs_block{float:right;}");
             // style += (".side_out{-webkit-transform: translate(100%,0);-moz-transform: translate(100%,0);-o-transform: translate(100%,0);transition: all 2s ease-in-out;}#side_tab a:hover + .side_out{-webkit-transform: translate(-200%,0);-moz-transform: translate(-200%,0);-o-transform: translate(-100%,0);transition: all 2s ease-in-out;}");
     
-            style += ("#GTR li.g, #GTR div.g { margin-top: 0.15em !important; margin-right: 0.25em !important; margin-bottom: 0.15em !important; margin-left: 0.25em; -moz-border-radius: 10px; border-radius: 10px; " + BGBorder + " "+ hue +" ! important; padding: 0.5em ! important; } li.g {list-style:none outside none;"+imagePreview+"};");
+            style += ("#GTR li.g, #GTR div.g { margin-top: 0.15em !important; margin-right: 0.25em !important; margin-bottom: 0.15em !important; margin-left: 0.25em; -moz-border-radius: 10px; border-radius: 10px; " + BGBorder + " "+ hue +" ! important; padding: 0.5em ! important; }");
+            style += ("li.g {list-style:none outside none;"+imagePreview+"}");
+            style += ("g-section-with-header { margin:0px !important;}");
+            style += ("#center_col .kp-blk {margin: 0px !important;}");
+            style += (".COEoid {margin: 0px !important;}");
+            // Style for currency card
+            style += (".vk_c {margin: 0px !important;}");
+            // Style for related searches
+            style += ("#brs .nVcaUb {display: inline-block !important;}");
+            style += ("#brs { margin: 0px !important;}");
+            style += (".e2BEnf {display: inline-block !important; padding: 0px !important; margin-right: 20px}");
+            style += ("#brs .card-section { display: inline-block !important;}");
+            style += (";");
     
             if(!this.watching)this.addStyle("@namespace url(http://www.w3.org/1999/xhtml); "+style);
     
@@ -1155,8 +1176,7 @@ EndHistory */
                 tab.parentNode.removeChild(tab);
             }
     
-            var table = document.buildElement('table', {id:'GTR'});
-            // var table = document.buildElement('table', {id:'GTR',cellspacing:'5%',cellpadding:'0'});
+            var table = document.buildElement('table', {id:'GTR', style:'table-layout: fixed; width: 100%;'});
             this.resultsTable = table;
             var div = document.getElementByXPath("//div/div[@class='g']/parent::div | //div[@id='res']/div | //div[@id='res']/span[@id='search']");
             if(div)
@@ -1174,19 +1194,41 @@ EndHistory */
                 // this.winInnerHeight = 0;
     
                 document.getElementById('ires').parentNode.appendChild(table);
-                var list = document.getElementsByXPath("//div[@id='ires']//li[contains(@class,'g')] | //div[@id='ires']//li/div[@class='g'] | //div[@id='ires']//div[@class='g']");
+                //var list = document.getElementsByXPath("//div[@id='ires']//li[contains(@class,'g')] | //div[@id='ires']//li/div[@class='g'] | //div[@id='ires']//div[@class='g']");
                 //var list = document.getElementsByXPath("//div[@id='ires']//li[contains(@class,'g')] | //div[@id='ires']//li/div[@class='g']");
-            
+                //var list = document.getElementsByXPath("//div[@id='ires']//g-section-with-header | //div[@id='ires']//div[contains(@class,'kp-blk')] | //div[@id='ires']//li[contains(@class,'g')] | //div[@id='ires']//div[contains(@class,'obcontainer')] | //div[@id='ires']//li/div[@class='g'] | //div[@id='ires']//div[@class='g']");
+    
+                var list = document.getElementsByXPath("//div[@id='ires']//g-section-with-header | //div[@id='ires']//div[contains(@class,'kp-blk')] | //div[@id='ires']//li[contains(@class,'g')] | //div[@id='ires']//div[contains(@class,'obcontainer')] | //div[@id='ires']//li/div[@class='g'] | //div[@id='ires']//div[@class='g']");
+    
+                var removeList = [];
+                for (let i = 0; i < list.length; i++) {
+                    for (var j = i; j < list.length; j++) {
+                        var node1 = list[i];
+                        var node2 = list[j];
+                        if ( node1.contains(node2) && node1 != node2 ) {
+                            removeList.push(node2);
+                        }
+                    }
+                }
+    
+                for (let i = 0; i < removeList.length; i++) {
+                    var index = list.indexOf(removeList[i]);
+                    if ( index > -1 ) {
+                        list.splice(index, 1);
+                    }
+                }
+    
                 var length = list.length;
                 if((ires = document.getElementById('ires')) && (cnt = document.getElementById('cnt'))){
                     ires.style.display = ((length==1) ? 'block' : 'none');
                     cnt.className = ((length==1) ? cnt.className.replace(' singleton','') : cnt.className + ' singleton');
                     if(length==1) return false;
                 }
-                for (var i = 0; i < list.length; i++)
+                for (let i = 0; i < list.length; i++)
                 {
                     this.resultsToTable(list, i, length, true);
                 }
+    
                 this.nextRow = this.curRow;
                 this.paginationBoundry();
                 this.lastI = i;
@@ -1341,8 +1383,7 @@ EndHistory */
             cell.setAttribute("valign", "top");
             if(!initial)cell.setAttribute("class", "dyna");
             var cellWidth = Math.floor(100 / this.numColumns) + "%";
-            cell.setAttribute("width", cellWidth);
-            //cell.setAttribute("id", i);
+            cell.style = "width: " + cellWidth;
             cell.appendChild(link);
         },
     
@@ -1366,7 +1407,7 @@ EndHistory */
             }
     
             //var list = document.getElementsByXPath(".//div[@id='res']/div//li[starts-with(@class,'g')]/ | .//div[@id='res']/div//li/div[@class='g']", nextResult);
-            var list = document.getElementsByXPath(".//div[@id='ires']/ol/div[starts-with(@class,'srg')]/li | //div[@id='ires']//div[@class='g'] | //div[@id='ires']//li[contains(@class,'g')]", nextResult);
+            var list = document.getElementsByXPath(".//div[@id='ires']/ol/div[starts-with(@class,'srg')]/li | //div[@id='ires']//div[contains(@class,'kp-blk')] | //div[@id='ires']//div[@class='g'] | //div[@id='ires']//li[contains(@class,'g')]", nextResult);
             var length = list.length;
             if((ires = document.getElementById('ires')) && (cnt = document.getElementById('cnt'))){
                 ires.style.display = ((length==1) ? 'block' : 'none');
