@@ -1,6 +1,6 @@
 // ==UserScript==
 // @author			mungushume
-// @version			1.7.5
+// @version			1.7.6
 // @name			GoogleMonkeyR
 // @namespace		http://www.monkeyr.com
 // @description		Google - Multiple columns of results, Remove "Sponsored Links", Number results, Auto-load more results, Remove web search dialogues, Open external links in a new tab, self updating and all configurable from a simple user dialogue.
@@ -28,6 +28,9 @@
 // @scriptsource	http://userscripts.org/scripts/show/9310
 // @scriptsource	http://google.monkeyr.com/script/1.7.0/googlemonkeyr.user.js
 /* StartHistory
+
+v.1.7.6 - 1 Sep 2019 - by Peri
+  - Bug fix: Change Result ID 'ires' -> 'res'
 
 v.1.7.5 - 16 Jun 2018 - by Peri
   - Change: Merge 1.7.3.3 and 1.7.4
@@ -691,8 +694,8 @@ EndHistory */
             }
     
             var style = ''
-            //style += (" #cnt #center_col {width:auto !important; max-width:100% !important;} #cnt #foot, .mw {margin-left:0 !important; width:auto !important; max-width:100% !important;}#rhs {left:auto; !important}#botstuff .sp_cnt,#botstuff .ssp, #ires{display:none} .s{max-width:98%!important;} .vshid{display:inline} #res h3.r {white-space:normal}");
-            style += ("#cnt.singleton #center_col, #cnt.singleton #foot, .mw {width:auto !important; max-width:100% !important;} #rhs {left:auto !important; position:absolute}#botstuff .sp_cnt,#botstuff .ssp, #ires{display:none} .s{max-width:98%!important;} .vshid{display:inline} .ab_dropdown ul{list-style:none} #GTR *{white-space:normal!important} #GTR{border-spacing:5px} #rcnt .col:nth-of-type(3){width:100%!important} #rcnt .col:nth-of-type(4){float: none; right: 0px; top: -140px; width:100% !important}");
+            //style += (" #cnt #center_col {width:auto !important; max-width:100% !important;} #cnt #foot, .mw {margin-left:0 !important; width:auto !important; max-width:100% !important;}#rhs {left:auto; !important}#botstuff .sp_cnt,#botstuff .ssp, #res{display:none} .s{max-width:98%!important;} .vshid{display:inline} #res h3.r {white-space:normal}");
+            style += ("#cnt.singleton #center_col, #cnt.singleton #foot, .mw {width:auto !important; max-width:100% !important;} #rhs {left:auto !important; position:absolute}#botstuff .sp_cnt,#botstuff .ssp, #res{display:none} .s{max-width:98%!important;} .vshid{display:inline} .ab_dropdown ul{list-style:none} #GTR *{white-space:normal!important} #GTR{border-spacing:5px} #rcnt .col:nth-of-type(3){width:100%!important} #rcnt .col:nth-of-type(4){float: none; right: 0px; top: -140px; width:100% !important}");
             style += ("div#scrollTop a {background:url("+UIL.RES.TOP_PNG+") transparent;border-radius: 10px 10px 10px 10px;bottom: 30px;height: 40px;position: fixed;right: 30px;width: 40px;z-index: 10000;}div#scrollTop a{-webkit-transition: opacity 1.0s ease;-moz-transition: opacity 1.0s ease;-o-transition: opacity 1.0s ease;0} div#scrollTop a.mh_show{opacity: 0.2} div#scrollTop a.mh_hide{opacity: 0}div#scrollTop a:hover{-webkit-transition: opacity .5s ease;-moz-transition: opacity .5s ease;-o-transition: opacity .5s ease;opacity: 0.5;}");
             
             // fix for a problem where columns end up too narrow
@@ -701,9 +704,9 @@ EndHistory */
     
             if(this.numColumns>1)
             {
-                style += ("#cnt.singleton #center_col, #cnt.singleton #foot, .mw {margin-left:0 !important;}");
+                style += ("#cnt.singleton #center_col, #cnt.singleton #foot, .mw {margin-left:10px !important; margin-right: 10px !important;}");
             }
-    
+ 
             if(this.autoLoad)
             {
                 style += ("#loadingimg {width:180px;height:34px;background-image:url(" + UIL.RES.LOADING_GIF + ");background-repeat:no-repeat;margin:2em auto auto auto;padding:10px;display:none;} #loadingimg p{font-size:130%;font-weight:bold;padding-left:40px;margin:0;float:left} #loadingimg a{text-align: center; float: left;margin: 2px 10px;}");
@@ -768,6 +771,7 @@ EndHistory */
             // style += (".side_out{-webkit-transform: translate(100%,0);-moz-transform: translate(100%,0);-o-transform: translate(100%,0);transition: all 2s ease-in-out;}#side_tab a:hover + .side_out{-webkit-transform: translate(-200%,0);-moz-transform: translate(-200%,0);-o-transform: translate(-100%,0);transition: all 2s ease-in-out;}");
     
             style += ("#GTR li.g, #GTR div.g, g-section-with-header { margin-top: 0.15em !important; margin-right: 0.25em !important; margin-bottom: 0.15em !important; margin-left: 0.25em; -moz-border-radius: 10px; border-radius: 10px; " + BGBorder + " "+ hue +" ! important; padding: 0.5em ! important; }");
+            style += ("#GTR h3, #extrares h3 { font-size: 20px;	line-height: 1.3;}");
             style += ("li.g {list-style:none outside none;"+imagePreview+"}");
             style += ("g-section-with-header { margin:0px !important;}");
             style += ("#center_col .kp-blk {margin: 0px !important;}");
@@ -799,7 +803,7 @@ EndHistory */
             var style = '';
             style += ("div#scrollTop a {background:url("+UIL.RES.TOP_PNG+") transparent;border-radius: 10px 10px 10px 10px;bottom: 30px;height: 40px;position: fixed;right: 30px;width: 40px;z-index: 10000;}div#scrollTop a{-webkit-transition: opacity 1.0s ease;-moz-transition: opacity 1.0s ease;-o-transition: opacity 1.0s ease;0} div#scrollTop a.mh_show{opacity: 0.2} div#scrollTop a.mh_hide{opacity: 0}div#scrollTop a:hover{-webkit-transition: opacity .5s ease;-moz-transition: opacity .5s ease;-o-transition: opacity .5s ease;opacity: 0.5;}");
             this.showBackToTopLink(true);
-            // style += ("#cnt #center_col, #cnt #foot, .mw {width:auto !important; max-width:100% !important;} #rhs {left:auto; !important}#botstuff .sp_cnt,#botstuff .ssp, #ires{display:none} .s{max-width:98%!important;} .vshid{display:inline} #res h3.r {white-space:normal}");
+            // style += ("#cnt #center_col, #cnt #foot, .mw {width:auto !important; max-width:100% !important;} #rhs {left:auto; !important}#botstuff .sp_cnt,#botstuff .ssp, #res{display:none} .s{max-width:98%!important;} .vshid{display:inline} #res h3.r {white-space:normal}");
             if(this.hideSearch)
             {
     //			style += ("#rcnt{margin-top:1em} #sfcnt,#sftr,#searchform{display:none!important;}#cnt{padding:0}#cnt .mw:first-child{position:absolute;top:4.5em;right:0}#rshdr .sfcc{position:absolute;top:2em;right:0}");
@@ -906,8 +910,8 @@ EndHistory */
                 clearTimeout(this.whackDomTimeOut);
                 this.whackDomTimeOut = setTimeout(function()
                 {
-                    var ires = document.getElementById('ires');
-                    if(ires){
+                    var res = document.getElementById('res');
+                    if(res){
                         monkeyr.log('!!!!! Whacking DOM !!!!!')
                         var extrares = document.getElementById('extrares');
                         var res = document.getElementById('res');
@@ -932,7 +936,7 @@ EndHistory */
                         }
     
                         this.processResults(document.getElementById('center_col'))
-                        ires.parentNode.removeChild(ires);
+                        res.parentNode.removeChild(res);
                         this.initialise = false;
                     }
                 }.bind(this),0);
@@ -1194,12 +1198,12 @@ EndHistory */
                 this.scrollHeight = 0;
                 // this.winInnerHeight = 0;
     
-                document.getElementById('ires').parentNode.appendChild(table);
-                //var list = document.getElementsByXPath("//div[@id='ires']//li[contains(@class,'g')] | //div[@id='ires']//li/div[@class='g'] | //div[@id='ires']//div[@class='g']");
-                //var list = document.getElementsByXPath("//div[@id='ires']//li[contains(@class,'g')] | //div[@id='ires']//li/div[@class='g']");
-                //var list = document.getElementsByXPath("//div[@id='ires']//g-section-with-header | //div[@id='ires']//div[contains(@class,'kp-blk')] | //div[@id='ires']//li[contains(@class,'g')] | //div[@id='ires']//div[contains(@class,'obcontainer')] | //div[@id='ires']//li/div[@class='g'] | //div[@id='ires']//div[@class='g']");
+                document.getElementById('res').parentNode.appendChild(table);
+                //var list = document.getElementsByXPath("//div[@id='res']//li[contains(@class,'g')] | //div[@id='res']//li/div[@class='g'] | //div[@id='res']//div[@class='g']");
+                //var list = document.getElementsByXPath("//div[@id='res']//li[contains(@class,'g')] | //div[@id='res']//li/div[@class='g']");
+                //var list = document.getElementsByXPath("//div[@id='res']//g-section-with-header | //div[@id='res']//div[contains(@class,'kp-blk')] | //div[@id='res']//li[contains(@class,'g')] | //div[@id='res']//div[contains(@class,'obcontainer')] | //div[@id='res']//li/div[@class='g'] | //div[@id='res']//div[@class='g']");
     
-                var list = document.getElementsByXPath("//div[@id='ires']//g-section-with-header | //div[@id='ires']//div[contains(@class,'kp-blk')] | //div[@id='ires']//li[contains(@class,'g')] | //div[@id='ires']//div[contains(@class,'obcontainer')] | //div[@id='ires']//li/div[@class='g'] | //div[@id='ires']//div[@class='g']");
+                var list = document.getElementsByXPath("//div[@id='res']//g-section-with-header | //div[@id='res']//div[contains(@class,'kp-blk')] | //div[@id='res']//li[contains(@class,'g')] | //div[@id='res']//div[contains(@class,'obcontainer')] | //div[@id='res']//li/div[@class='g'] | //div[@id='res']//div[@class='g']");
     
                 var removeList = [];
                 for (let i = 0; i < list.length; i++) {
@@ -1220,8 +1224,8 @@ EndHistory */
                 }
     
                 var length = list.length;
-                if((ires = document.getElementById('ires')) && (cnt = document.getElementById('cnt'))){
-                    ires.style.display = ((length==1) ? 'block' : 'none');
+                if((res = document.getElementById('res')) && (cnt = document.getElementById('cnt'))){
+                    res.style.display = ((length==1) ? 'block' : 'none');
                     cnt.className = ((length==1) ? cnt.className.replace(' singleton','') : cnt.className + ' singleton');
                     if(length==1) return false;
                 }
@@ -1408,10 +1412,10 @@ EndHistory */
             }
     
             //var list = document.getElementsByXPath(".//div[@id='res']/div//li[starts-with(@class,'g')]/ | .//div[@id='res']/div//li/div[@class='g']", nextResult);
-            var list = document.getElementsByXPath(".//div[@id='ires']/ol/div[starts-with(@class,'srg')]/li | //div[@id='ires']//div[contains(@class,'kp-blk')] | //div[@id='ires']//div[@class='g'] | //div[@id='ires']//li[contains(@class,'g')]", nextResult);
+            var list = document.getElementsByXPath(".//div[@id='res']/ol/div[starts-with(@class,'srg')]/li | //div[@id='res']//div[contains(@class,'kp-blk')] | //div[@id='res']//div[@class='g'] | //div[@id='res']//li[contains(@class,'g')]", nextResult);
             var length = list.length;
-            if((ires = document.getElementById('ires')) && (cnt = document.getElementById('cnt'))){
-                ires.style.display = ((length==1) ? 'block' : 'none');
+            if((res = document.getElementById('res')) && (cnt = document.getElementById('cnt'))){
+                res.style.display = ((length==1) ? 'block' : 'none');
                 cnt.className = ((length==1) ? cnt.className.replace(' g','') : cnt.className + ' g');
                 if(length==1) return false;
             }
@@ -2785,7 +2789,7 @@ EndHistory */
                 if( !cookieName ) { return; }
                 if( lifeTime == "delete" ) { lifeTime = -10; } else { lifeTime = 31536000; }
                 document.cookie = escape( cookieName ) + "=" + escape( getRecoverableString( cookieValue ) ) +
-                    ";expires=" + ( new Date( ( new Date() ).getTime() + ( 1000 * lifeTime ) ) ).toGMTString() + ";path=/";
+                    ";expres=" + ( new Date( ( new Date() ).getTime() + ( 1000 * lifeTime ) ) ).toGMTString() + ";path=/";
             }
         }
     }
